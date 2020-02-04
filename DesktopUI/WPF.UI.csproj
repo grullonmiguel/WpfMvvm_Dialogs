@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViewModels\WPF.MVVM.Library.csproj" />
+    <ProjectReference Include="..\ViewModels\MVVM.Library.csproj" />
   </ItemGroup>
 
 </Project>

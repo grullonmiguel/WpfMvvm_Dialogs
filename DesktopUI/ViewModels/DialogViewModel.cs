@@ -1,4 +1,4 @@
-﻿using WPF.MVVM.Library;
+﻿using MVVM.Library;
 
 namespace WPF.UI.ViewModels
 {
