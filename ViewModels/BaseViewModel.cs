@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace ViewModels
+namespace WPF.MVVM.Library
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
