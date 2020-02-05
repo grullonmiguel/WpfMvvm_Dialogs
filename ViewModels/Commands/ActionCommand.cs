@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MVVM.Library
+namespace MVVM.Library.Commands
 {
-    public class ActionCommand : ICommand
+    public class ActionCommand : ICommand, IActionCommand
     {
         #region Fields
 
         private bool isExecuting;
         private readonly Action<object> _execute;
-        private readonly Predicate<object> _canExecute; 
+        private readonly Predicate<object> _canExecute;
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace MVVM.Library
         /// </returns>
         public bool CanExecute(object parameter)
         {
-            if (_canExecute == null) 
+            if (_canExecute == null)
                 return isExecuting == false;
 
             return !isExecuting && _canExecute(parameter);
@@ -87,7 +87,7 @@ namespace MVVM.Library
                 OnCanExecuteChanged();
                 _execute(parameter);
             }
-            catch (Exception)
+            finally
             {
                 isExecuting = false;
                 OnCanExecuteChanged();

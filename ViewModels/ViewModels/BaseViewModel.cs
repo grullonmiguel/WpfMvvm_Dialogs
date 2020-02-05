@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace MVVM.Library
+namespace MVVM.Library.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
