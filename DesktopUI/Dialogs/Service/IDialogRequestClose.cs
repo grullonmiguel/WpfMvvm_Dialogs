@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WPF.UI.Dialogs
+namespace WPF.UI.Dialogs.Service
 {
     public interface IDialogRequestClose
     {

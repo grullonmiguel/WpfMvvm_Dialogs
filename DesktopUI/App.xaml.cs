@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using WPF.UI.Dialogs;
+using WPF.UI.Dialogs.Service;
 using WPF.UI.ViewModels;
 using WPF.UI.Views;
 
@@ -13,7 +13,7 @@ namespace DesktopUI
 
             IDialogService dialogService = new DialogService(MainWindow);
 
-            dialogService.Register<DialogViewModel, DialogView>();
+            dialogService.Register<DialogViewModel, DialogWindow>();
 
             DisplayMainView(dialogService);
         }

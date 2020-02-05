@@ -1,6 +1,8 @@
 ﻿using MVVM.Library.Commands;
 using MVVM.Library.ViewModels;
+using System;
 using WPF.UI.Dialogs;
+using WPF.UI.Dialogs.Service;
 
 namespace WPF.UI.ViewModels
 {
@@ -8,6 +10,8 @@ namespace WPF.UI.ViewModels
     {
         #region Fields
 
+        private string _title = "Alert";
+        private string _message = "This is an Alert";
         private string _okBrush;
         private string _cancelBrush;
         private readonly string ColorGray = "Gray";
@@ -18,6 +22,18 @@ namespace WPF.UI.ViewModels
         #endregion
 
         #region Properties
+
+        public string Title
+        {
+            get => _title;
+            set { _title = value; OnPropertyChanged(); }
+        }
+
+        public string Message
+        {
+            get => _message;
+            set { _message = value; OnPropertyChanged(); }
+        }
 
         public IActionCommand DisplayMessageCommand { get; }
 
@@ -40,25 +56,30 @@ namespace WPF.UI.ViewModels
         public ShellViewModel(IDialogService dialogService)
         {
             _dialogService = dialogService;
-            SetBrushColor(DialogResult.Default);
+            SetBrushColor(DialogResults.Undefined);
             DisplayMessageCommand = new ActionCommand(x => DisplayMessage());
+        }
+
+        private bool CanExecuteAlert()
+        {            
+            return !string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message);
         }
 
         #endregion
 
         #region Methods
 
-        private void SetBrushColor(DialogResult state)
+        private void SetBrushColor(DialogResults state)
         {
-            OkBrush = state == DialogResult.Ok ? ColorGreen : ColorGray;
-            CancelBrush = state == DialogResult.Cancel ? ColorRed : ColorGray;
+            OkBrush = state == DialogResults.Yes ? ColorGreen : ColorGray;
+            CancelBrush = state == DialogResults.No ? ColorRed : ColorGray;
         }
 
         private void DisplayMessage()
         {
-            SetBrushColor(DialogResult.Default);
+            SetBrushColor(DialogResults.Undefined);
 
-            var viewModel = new DialogViewModel("Hello World");
+            var viewModel = new DialogViewModel(Title, Message);
 
             bool? result = _dialogService.ShowDialog(viewModel);
 
@@ -66,11 +87,11 @@ namespace WPF.UI.ViewModels
             {
                 if (result.Value)
                 {
-                    SetBrushColor(DialogResult.Ok);
+                    SetBrushColor(DialogResults.Yes);
                 }
                 else
                 {
-                    SetBrushColor(DialogResult.Cancel);
+                    SetBrushColor(DialogResults.No);
                 }
             }
         }

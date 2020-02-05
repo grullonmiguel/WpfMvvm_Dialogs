@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace WPF.UI.Dialogs
+namespace WPF.UI.Dialogs.Service
 {
     public class DialogService : IDialogService
     {
@@ -40,7 +40,7 @@ namespace WPF.UI.Dialogs
         /// Store mappings of a view model to its associated view
         /// </summary>
         public void Register<TViewModel, TView>() where TViewModel : IDialogRequestClose
-                                                  where TView : IDialog
+                                                  where TView : IDialogWindow
         {
             // Make sure a view model is mapped to only one view
             if (Mappings.ContainsKey(typeof(TViewModel)))
@@ -55,7 +55,7 @@ namespace WPF.UI.Dialogs
         {
             var viewType = Mappings[typeof(TViewModel)];
 
-            var dialogWindow = (IDialog)Activator.CreateInstance(viewType);
+            var dialogWindow = (IDialogWindow)Activator.CreateInstance(viewType);
 
             viewModel.CloseRequested += CreateHandler(viewModel, dialogWindow);
 
@@ -73,7 +73,7 @@ namespace WPF.UI.Dialogs
         /// <summary>
         /// Creates an instance of EventHandler<DialogCloseRequestEventArgs> />
         /// </summary>
-        private static EventHandler<DialogCloseRequestEventArgs> CreateHandler<TViewModel>(TViewModel viewModel, IDialog dialog) 
+        private static EventHandler<DialogCloseRequestEventArgs> CreateHandler<TViewModel>(TViewModel viewModel, IDialogWindow dialog) 
             where TViewModel : IDialogRequestClose
         {
             void handler(object sender, DialogCloseRequestEventArgs e)

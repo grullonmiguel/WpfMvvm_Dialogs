@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
-namespace WPF.UI.Dialogs
+namespace WPF.UI.Dialogs.Service
 {
-    public interface IDialog
+    public interface IDialogWindow
     {
         object DataContext { get; set; }
 
