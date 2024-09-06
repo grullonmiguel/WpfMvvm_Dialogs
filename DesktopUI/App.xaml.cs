@@ -11,19 +11,10 @@ namespace DesktopUI
         {
             base.OnStartup(e);
 
-            IDialogService dialogService = new DialogService(MainWindow);
-
+            var dialogService = new DialogService(MainWindow);
             dialogService.Register<DialogViewModel, DialogWindow>();
 
-            DisplayMainView(dialogService);
-        }
-
-        private void DisplayMainView(IDialogService dialogService)
-        {
-            var viewModel = new ShellViewModel(dialogService);
-
-            var view = new ShellView{DataContext = viewModel};
-
+            var view = new ShellView { DataContext = new ShellViewModel(dialogService) };
             view.ShowDialog();
         }
     }

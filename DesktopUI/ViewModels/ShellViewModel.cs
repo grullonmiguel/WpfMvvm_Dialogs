@@ -1,6 +1,5 @@
 ﻿using MVVM.Library.Commands;
 using MVVM.Library.ViewModels;
-using System;
 using WPF.UI.Dialogs;
 using WPF.UI.Dialogs.Service;
 
@@ -10,13 +9,9 @@ namespace WPF.UI.ViewModels
     {
         #region Fields
 
-        private string _title = "Alert";
-        private string _message = "This is an Alert";
-        private string _okBrush;
-        private string _cancelBrush;
-        private readonly string ColorGray = "Gray";
-        private readonly string ColorGreen = "Green";
-        private readonly string ColorRed = "Red";
+        private static string ColorGray = "Gray";
+        private static string ColorGreen = "Green";
+        private static string ColorRed = "Red";
         private readonly IDialogService _dialogService;
 
         #endregion
@@ -28,26 +23,30 @@ namespace WPF.UI.ViewModels
             get => _title;
             set { _title = value; OnPropertyChanged(); }
         }
+        private string _title = "Alert";
 
         public string Message
         {
             get => _message;
             set { _message = value; OnPropertyChanged(); }
         }
-
-        public IActionCommand DisplayMessageCommand { get; }
+        private string _message = "This is an Alert";
 
         public string OkBrush
         {
             get => _okBrush;
             set {  _okBrush = value; OnPropertyChanged(); }
         }
+        private string _okBrush = ColorGray;
 
         public string CancelBrush
         {
             get => _cancelBrush; 
             set {  _cancelBrush = value; OnPropertyChanged(); }
         }
+        private string _cancelBrush = ColorGray;
+
+        public IActionCommand DisplayMessageCommand => new ActionCommand(x => DisplayMessage());
 
         #endregion
 
@@ -56,44 +55,28 @@ namespace WPF.UI.ViewModels
         public ShellViewModel(IDialogService dialogService)
         {
             _dialogService = dialogService;
-            SetBrushColor(DialogResults.Undefined);
-            DisplayMessageCommand = new ActionCommand(x => DisplayMessage());
         }
 
-        private bool CanExecuteAlert()
-        {            
-            return !string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message);
-        }
+        private bool CanExecuteAlert() 
+            => !string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message);
 
         #endregion
 
         #region Methods
 
-        private void SetBrushColor(DialogResults state)
+        private void DisplayMessage()
+        {
+            bool? result = _dialogService.ShowDialog(new DialogViewModel(Title, Message));
+            if (!result.HasValue)
+                return;
+
+            SetOkCancelForeground(result.Value ? DialogResults.Yes : DialogResults.No);
+        }
+
+        private void SetOkCancelForeground(DialogResults state)
         {
             OkBrush = state == DialogResults.Yes ? ColorGreen : ColorGray;
             CancelBrush = state == DialogResults.No ? ColorRed : ColorGray;
-        }
-
-        private void DisplayMessage()
-        {
-            SetBrushColor(DialogResults.Undefined);
-
-            var viewModel = new DialogViewModel(Title, Message);
-
-            bool? result = _dialogService.ShowDialog(viewModel);
-
-            if (result.HasValue)
-            {
-                if (result.Value)
-                {
-                    SetBrushColor(DialogResults.Yes);
-                }
-                else
-                {
-                    SetBrushColor(DialogResults.No);
-                }
-            }
         }
 
         #endregion
